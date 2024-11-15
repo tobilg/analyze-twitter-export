@@ -50,7 +50,7 @@ WHERE
 ORDER BY created_at DESC;
 ```
 
-#### Show most liked tweets
+### Show most liked tweets
 ```sql
 SELECT 
     tweet_id, created_at, content_expanded, favorite_count, retweet_count
