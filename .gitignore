@@ -129,7 +129,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-src-data/
+src-data/*.zip
 data/
 
 .DS_Store
