@@ -104,7 +104,6 @@ WHERE
   is_latest = true;
 
 -- Create the URL table with distinct URLs
---CREATE OR REPLACE TABLE url AS 
 INSERT INTO url
 WITH urls AS (
   SELECT
@@ -119,13 +118,15 @@ SELECT DISTINCT
 FROM urls;
 
 -- Create the tweet table
---CREATE OR REPLACE TABLE tweet AS 
 INSERT INTO tweet
 SELECT
   id as tweet_id,
   created_at,
   content,
-  t.final_content as content_expanded,
+  CASE
+    WHEN t.final_content IS NOT NULL THEN t.final_content
+    ELSE content
+  END AS content_expanded,
   favorite_count,
   retweet_count,
   language,
@@ -137,7 +138,6 @@ LEFT OUTER JOIN
 ON
   extracted_tweets.id = t.tweet_id;
 
---CREATE OR REPLACE TABLE rel_tweet_url AS 
 INSERT INTO rel_tweet_url
 SELECT
   tu.id AS tweet_id,
@@ -183,7 +183,6 @@ AND
   reply_to_screen_name IS NOT NULL;
 
 -- Create the user table
---CREATE OR REPLACE TABLE user AS 
 INSERT INTO "user"
 SELECT DISTINCT
   CASE
@@ -226,8 +225,7 @@ AND
 ORDER BY user_id ASC;
 INSERT INTO "user" VALUES ('-1', 'Dummy User', 'Dummy User');
 
--- Create the replied users relation table
---CREATE OR REPLACE TABLE rel_tweet_replied_user AS 
+-- Create the replied users relation table 
 INSERT INTO rel_tweet_replied_user
 SELECT DISTINCT
   tweet_id,
@@ -238,7 +236,6 @@ WHERE
   user_id IN (SELECT DISTINCT user_id FROM "user");
 
 -- Create the mentioned users relation table
---CREATE OR REPLACE TABLE rel_tweet_mentioned_user AS 
 INSERT INTO rel_tweet_mentioned_user
 SELECT DISTINCT
   id AS tweet_id,
@@ -249,7 +246,6 @@ WHERE
   user_id IN (SELECT DISTINCT user_id FROM "user");
 
 -- Create the hashtag table
---CREATE OR REPLACE TABLE hashtag AS 
 INSERT INTO hashtag
 WITH tweet_hashtags AS (
   SELECT
@@ -268,7 +264,6 @@ SELECT
   hashtag
 FROM hashtag_data;
 
---CREATE OR REPLACE TABLE rel_tweet_hashtag AS 
 INSERT INTO rel_tweet_hashtag
 WITH tweet_hashtags AS (
   SELECT

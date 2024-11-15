@@ -21,7 +21,27 @@ The following diagram shows the structure of the resulting database.
 ![Twitter Export Database ERD](docs/erd.png)
 
 ## Example Queries
-The following queries can be used to analyze the data.
+The following example queries can be used to analyze the data.
+
+### Show all tweets and replies
+```sql
+SELECT 
+    * 
+FROM 
+    tweet
+ORDER BY created_at DESC;
+```
+
+### Show all tweets with expanded content (w/o replies)
+```sql
+SELECT 
+    tweet_id, created_at, content_expanded, favorite_count, retweet_count, language
+FROM 
+    tweet
+WHERE
+    is_reply = false
+ORDER BY created_at DESC;
+```
 
 ### Number of tweets per day
 ```sql
@@ -31,4 +51,28 @@ FROM
     tweet
 GROUP BY day
 ORDER BY day;
+```
+
+### Most used hashtags
+```sql
+SELECT 
+    h.hashtag, COUNT(distinct rh.tweet_id) as count
+FROM 
+    hashtag h
+INNER JOIN
+    rel_tweet_hashtag rh ON h.hashtag_id = rh.hashtag_id
+GROUP BY h.hashtag
+ORDER BY count DESC;
+```
+
+### Most mentioned users
+```sql
+SELECT 
+    u.screen_name, COUNT(distinct ru.tweet_id) as count
+FROM 
+    user u
+INNER JOIN
+    rel_tweet_mentioned_user ru ON u.user_id = ru.user_id
+GROUP BY u.screen_name
+ORDER BY count DESC;
 ```
