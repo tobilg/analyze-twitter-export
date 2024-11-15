@@ -9,7 +9,7 @@ The following steps are required to analyze your Twitter export data.
 2. Copy the downloaded Twitter export data to the `src-data` directory.  
     This should be the zip file you downloaded from Twitter.
 3. Prepare the Twitter export data for import into DuckDB.  
-    The data needs to be converted into a format that can be imported into DuckDB. This can be done with running the `scripts/tweets.sh` script.
+    The data needs to be converted into a format that can be imported into DuckDB. This can be done with running the `scripts/prepare_tweets.sh` script.
 4. Create a DuckDB database from your Twitter export data.  
     This can be done with running the `scripts/create_database.sh` script. The result will be a file called `twitter.duckdb` in the `data` directory.
 5. Analyze the data.  
@@ -19,3 +19,16 @@ The following steps are required to analyze your Twitter export data.
 The following diagram shows the structure of the resulting database.
 
 ![Twitter Export Database ERD](docs/erd.png)
+
+## Example Queries
+The following queries can be used to analyze the data.
+
+### Number of tweets per day
+```sql
+SELECT 
+    strftime(created_at, '%Y-%m-%d') as day, COUNT(*) as count
+FROM 
+    tweet
+GROUP BY day
+ORDER BY day;
+```
