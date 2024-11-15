@@ -50,6 +50,15 @@ WHERE
 ORDER BY created_at DESC;
 ```
 
+#### Show most liked tweets
+```sql
+SELECT 
+    tweet_id, created_at, content_expanded, favorite_count, retweet_count
+FROM 
+    tweet
+ORDER BY favorite_count DESC;
+```
+
 ### Number of tweets per day
 ```sql
 SELECT 

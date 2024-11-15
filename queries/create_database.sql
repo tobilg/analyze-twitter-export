@@ -2,7 +2,7 @@
 CREATE TABLE hashtag (hashtag_id BIGINT PRIMARY KEY, hashtag VARCHAR);
 CREATE TABLE url (url_id BIGINT PRIMARY KEY, url VARCHAR, expanded_url VARCHAR);
 CREATE TABLE "user" (user_id VARCHAR PRIMARY KEY, screen_name VARCHAR, "name" VARCHAR);
-CREATE TABLE tweet(tweet_id VARCHAR PRIMARY KEY, created_at TIMESTAMP, "content" VARCHAR, content_expanded VARCHAR, favorite_count VARCHAR, retweet_count VARCHAR, "language" VARCHAR, is_reply BOOLEAN);
+CREATE TABLE tweet(tweet_id VARCHAR PRIMARY KEY, created_at TIMESTAMP, "content" VARCHAR, content_expanded VARCHAR, favorite_count INTEGER, retweet_count INTEGER, "language" VARCHAR, is_reply BOOLEAN);
 CREATE TABLE rel_tweet_hashtag (tweet_id VARCHAR, hashtag_id BIGINT, FOREIGN KEY (tweet_id) REFERENCES tweet (tweet_id), FOREIGN KEY (hashtag_id) REFERENCES hashtag (hashtag_id));
 CREATE TABLE rel_tweet_mentioned_user (tweet_id VARCHAR, user_id VARCHAR, FOREIGN KEY (tweet_id) REFERENCES tweet (tweet_id), FOREIGN KEY (user_id) REFERENCES "user" (user_id));
 CREATE TABLE rel_tweet_replied_user (tweet_id VARCHAR, user_id VARCHAR, FOREIGN KEY (tweet_id) REFERENCES tweet (tweet_id), FOREIGN KEY (user_id) REFERENCES "user" (user_id));
@@ -20,8 +20,8 @@ SELECT
   tweet.entities.urls AS urls,
   tweet.entities.user_mentions AS mentions,
   tweet.entities.hashtags AS hashtags,
-  tweet.favorite_count,
-  tweet.retweet_count,
+  tweet.favorite_count::int AS favorite_count,
+  tweet.retweet_count::int AS retweet_count,
   tweet.lang AS language,
   CASE
     WHEN tweet.in_reply_to_status_id_str IS NOT NULL THEN true
