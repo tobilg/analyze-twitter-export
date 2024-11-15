@@ -20,6 +20,13 @@ The following diagram shows the structure of the resulting database.
 
 ![Twitter Export Database ERD](docs/erd.png)
 
+## SQL Workbench
+You can use [SQL Workbench](https://sql-workbench.com) to analyze the data locally, in the browser. Just drag & drop the `data/twitter.duckdb` file in SQL Workbench's file dropping area.
+
+You need to make sure though that you **add the database name as prefix to the table names** in your queries (e.g. `SELECT * FROM twitter.tweet LIMIT 10;`).
+
+![SQL Workbench](docs/screenshot.png)
+
 ## Example Queries
 The following example queries can be used to analyze the data.
 
